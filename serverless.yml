@@ -1,0 +1,42 @@
+service: employee-portal
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: sit
+  region: ap-south-1
+  environment:
+    DYNAMODB_TABLE_NAME: ${self:custom.postsTableName}
+custom:
+  postsTableName: Employee_Table
+plugins:
+  - serverless-iam-roles-per-function
+functions:
+  updateEmployee:
+    handler: api.updateEmployee
+    name: update-emloyee
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: post/{empId}
+          method: PUT
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:UpdateItem"
+        Resource: !GetAtt PostsTable.Arn
+resources:
+  Resources:
+    PostsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.postsTableName}
+        AttributeDefinitions:
+          - AttributeName: empId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: empId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
