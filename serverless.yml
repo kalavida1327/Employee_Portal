@@ -1,4 +1,4 @@
-service: employeePortal
+service: employee-portal
 provider:
   name: aws
   runtime: nodejs18.x
@@ -13,7 +13,7 @@ plugins:
 functions:
   updateEmployee:
     handler: api.updateEmployee
-    name: update-emloyee
+    name: Update-Emloyee
     memorySize: 128 # mb
     timeout: 5 # seconds
     events:
