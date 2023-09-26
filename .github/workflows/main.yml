@@ -3,7 +3,7 @@ name: Deploy Employee Portal DynamoDB LAMBDA CRUD API
 # events but only for the main branch
 on:
   push:
-    branches: [main]
+    branches: [master]
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "deploy"
