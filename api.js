@@ -13,6 +13,28 @@ const updateEmployee = async (event) => {
   try {
     const body = JSON.parse(event.body);
     const objKeys = Object.keys(body);
+
+    const knownAttributes = [
+      'FirstName',
+      'LastName',
+      'MidleName',
+      'Email',
+      'Dob',
+      'MaritalStatus'
+    ]; // Replace with actual attribute names
+    const unknownAttributes = Object.keys(body).filter(
+      (key) => !knownAttributes.includes(key)
+    );
+
+    if (unknownAttributes.length > 0) {
+      // Unknown attributes are present, return an error response
+      response.statusCode = 400; // You can choose an appropriate status code
+      response.body = JSON.stringify({
+        message: 'Unknown attributes in the request.',
+        unknownAttributes,
+      });
+      return response;
+    }
     const params = {
       TableName: process.env.DYNAMODB_TABLE_NAME,
       Key: marshall({
