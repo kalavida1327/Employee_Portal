@@ -43,15 +43,23 @@ const updateEmployee = async (event) => {
       message: 'Successfully updated post.',
       updateResult,
     });
-  } catch (e) {
-    console.error(e);
-    response.statusCode = 500;
-    response.body = JSON.stringify({
-      message: 'Failed to update post.',
-      errorMsg: e.message,
-      errorStack: e.stack,
-    });
-  }
+  } catch (error) {
+      // Check if the error is due to a failed conditional check
+      if (error instanceof ConditionalCheckFailedException) {
+        response.statusCode = 404; // Employee not found
+        response.body = JSON.stringify({
+          message: 'Employee not found in the database.',
+        });
+      } else {
+        // Handle other errors
+        console.error(error);
+        response.statusCode = 500;
+        response.body = JSON.stringify({
+          message: 'Failed to update employee record.',
+          errorMsg: error.message,
+          errorStack: error.stack,
+        });
+      }}
   return response;
 };
 
