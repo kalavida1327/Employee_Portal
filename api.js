@@ -36,6 +36,7 @@ const updateEmployee = async (event) => {
           {}
         )
       ),
+      ConditionExpression: 'attribute_exists(empId)'
     };
     const updateResult = await client.send(new UpdateItemCommand(params));
     response.body = JSON.stringify({
