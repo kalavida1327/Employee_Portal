@@ -25,6 +25,34 @@ functions:
         Action:
           - "dynamodb:UpdateItem"
         Resource: !GetAtt PostsTable.Arn
+  softDeleteEmployee:
+    handler: api.softDeleteEmployee
+    name: Soft-Delete-Employee
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: PATCH /employees/{empId}   
+          method: PATCH # Change the method to PATCH
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+        - "dynamodb:UpdateItem" # Update the IAM action to UpdateItem
+        Resource: !GetAtt PostsTable.Arn # The resource remains the same
+deleteEmployee:
+    handler: api.deleteEmployee
+    name: Delete-Employee
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: DELETE /employees/{empId}
+          method: DELETE 
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+        - "dynamodb:DeleteItem"
+        Resource: !GetAtt PostsTable.Arn # The resource remains the same   
 resources:
   Resources:
     PostsTable:

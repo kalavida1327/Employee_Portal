@@ -8,7 +8,6 @@ const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb');
 const client = new DynamoDBClient();
 
 const updateEmployee = async (event) => {
-  
   const response = { statusCode: 200 };
   try {
     const body = JSON.parse(event.body);
@@ -22,6 +21,7 @@ const updateEmployee = async (event) => {
       'Dob',
       'MaritalStatus'
     ]; // Replace with actual attribute names
+
     const unknownAttributes = Object.keys(body).filter(
       (key) => !knownAttributes.includes(key)
     );
@@ -50,6 +50,7 @@ const updateEmployee = async (event) => {
         }),
         {}
       ),
+
       ExpressionAttributeValues: marshall(
         objKeys.reduce(
           (acc, key, index) => ({
