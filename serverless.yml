@@ -33,7 +33,7 @@ functions:
     events:
       - http:
           path: PATCH /employees/{empId}   
-          method: PATCH # Change the method to PATCH
+          method: DELETE # Change the method to PATCH
     iamRoleStatements:
       - Effect: "Allow"
         Action:
