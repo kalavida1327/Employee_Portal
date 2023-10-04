@@ -58,8 +58,10 @@ const deleteEmployee = async (event) => {
     };
     const existingItem = await client.send(new GetItemCommand(getItemParams));
 
+    console.log('existingItem-------', existingItem);
+
     // If the item does not exist, return a failure response
-    if (!existingItem.Item) {
+    if (!existingItem) {
       response.statusCode = 404; // Not Found
       response.body = JSON.stringify({
         message: 'Employee not found for deletion.',
@@ -75,7 +77,7 @@ const deleteEmployee = async (event) => {
     const deleteResult = await client.send(new DeleteItemCommand(deleteParams));
 
     response.body = JSON.stringify({
-      message: 'Successfully deleted employee.',
+      message: 'Successfully deleted post.',
       deleteResult,
     });
   } catch (e) {
