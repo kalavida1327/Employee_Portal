@@ -69,7 +69,7 @@ const updateEmployee = async (event) => {
     });
   } catch (error) {
       // Check if the error is due to a failed conditional check
-      if (error instanceof ConditionalCheckFailedException) {
+      if (error instanceof ConditionalCheckFailedException) { 
         response.statusCode = 404; // Employee not found
         response.body = JSON.stringify({
           message: 'Employee not found in the database.',

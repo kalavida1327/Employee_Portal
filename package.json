@@ -4,7 +4,7 @@
   "description": "DynamoDB CRUD API using API Gateway and AWS Lambda",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha Lib/DeleteModule/test.js"
   },
   "keywords": [],
   "author": "kavan",
@@ -12,9 +12,12 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.415.0",
     "@aws-sdk/util-dynamodb": "^3.415.0",
-    "aws-sdk": "^2.1460.0"
+    "aws-sdk": "^2.1460.0",
+    "aws-sdk-mock": "^5.8.0"
   },
   "devDependencies": {
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
     "serverless-iam-roles-per-function": "^3.2.0"
   }
 }

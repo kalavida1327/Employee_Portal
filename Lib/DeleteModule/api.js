@@ -54,7 +54,16 @@ const deleteEmployee = async (event) => {
       TableName: process.env.DYNAMODB_TABLE_NAME,
       Key: marshall({ empId: event.pathParameters.empId }),
     };
-    const deleteResult = await client.send(new DeleteItemCommand(params));
+   const existingItem = await client.send(new GetItemCommand(getItemParams));
+
+   // If the item does not exist, return a failure response
+   if (!existingItem.Item) {
+     response.statusCode = 404; // Not Found
+     response.body = JSON.stringify({
+       message: 'Employee not found for deletion.',
+     });
+     return response;
+   }
     response.body = JSON.stringify({
       message: 'Successfully deleted post.',
       deleteResult,
