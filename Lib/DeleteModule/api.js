@@ -3,6 +3,7 @@ const {
   DeleteItemCommand,
   UpdateItemCommand,
   ConditionalCheckFailedException,
+  GetItemCommand,
 } = require('@aws-sdk/client-dynamodb');
 
 const { marshall} = require('@aws-sdk/util-dynamodb');
@@ -49,23 +50,32 @@ const softDeleteEmployee = async (event) => {
 
 const deleteEmployee = async (event) => {
   const response = { statusCode: 200 };
+   const empId = event.pathParameters.empId;
   try {
-    const params = {
+    const getItemParams = {
       TableName: process.env.DYNAMODB_TABLE_NAME,
-      Key: marshall({ empId: event.pathParameters.empId }),
+      Key: marshall({ empId: empId }),
     };
-   const existingItem = await client.send(new GetItemCommand(getItemParams));
+    const existingItem = await client.send(new GetItemCommand(getItemParams));
 
-   // If the item does not exist, return a failure response
-   if (!existingItem.Item) {
-     response.statusCode = 404; // Not Found
-     response.body = JSON.stringify({
-       message: 'Employee not found for deletion.',
-     });
-     return response;
-   }
+    // If the item does not exist, return a failure response
+    if (!existingItem.Item) {
+      response.statusCode = 404; // Not Found
+      response.body = JSON.stringify({
+        message: 'Employee not found for deletion.',
+      });
+      return response;
+    }
+    // If the item exists, proceed with the delete operation
+    const deleteParams = {
+      TableName: process.env.DYNAMODB_TABLE_NAME,
+      Key: marshall({ empId: empId }),
+    };
+
+    const deleteResult = await client.send(new DeleteItemCommand(deleteParams));
+
     response.body = JSON.stringify({
-      message: 'Successfully deleted post.',
+      message: 'Successfully deleted employee.',
       deleteResult,
     });
   } catch (e) {
