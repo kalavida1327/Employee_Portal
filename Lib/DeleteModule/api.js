@@ -61,7 +61,7 @@ const deleteEmployee = async (event) => {
     console.log('existingItem-------', existingItem);
 
     // If the item does not exist, return a failure response
-    if (!existingItem) {
+    if (!existingItem.Item) {
       response.statusCode = 404; // Not Found
       response.body = JSON.stringify({
         message: 'Employee not found for deletion.',
