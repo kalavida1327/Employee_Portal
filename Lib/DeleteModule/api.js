@@ -78,13 +78,14 @@ const deleteEmployee = async (event) => {
     });
   } catch (e) {
     console.log('---------error', e);
+    console.log(' e.$metadata.httpStatusCode,-----------', e.$metadata.httpStatusCode);
     console.error(e);
     response.statusCode = e.statusCode;
     response.body = JSON.stringify({
       message: 'Failed to delete employee personal information.',
       errorMsg: e.message,
       errorStack: e.stack,
-      statusCode: e.httpStatusCode,
+      statusCode: e.$metadata.httpStatusCode,
     });
   }
   return response;
