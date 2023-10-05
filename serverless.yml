@@ -11,20 +11,6 @@ custom:
 plugins:
   - serverless-iam-roles-per-function
 functions:
-  updateEmployee:
-    handler: api.updateEmployee
-    name: Update-Emloyee
-    memorySize: 128 # mb
-    timeout: 5 # seconds
-    events:
-      - http:
-          path: employees/{empId}
-          method: PUT
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - "dynamodb:UpdateItem"
-        Resource: !GetAtt PostsTable.Arn
   softDeleteEmployee:
     handler: Lib/DeleteModule/api.softDeleteEmployee
     name: Soft-Delete-Employee
