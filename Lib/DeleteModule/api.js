@@ -38,6 +38,7 @@ const softDeleteEmployee = async (event) => {
   } catch (e) {
     console.error(e);
     response.body = JSON.stringify({
+      statusCode: e.$metadata.httpStatusCode,
       message: 'Failed to deleted employee.',
       errorMsg: e.message,
       errorStack: e.stack,
@@ -52,7 +53,7 @@ const deleteEmployee = async (event) => {
   try {
     const getItemParams = {
       TableName: process.env.DYNAMODB_TABLE_NAME,
-      Key: marshall({ emId: empId }),
+      Key: marshall({ empId: empId }),
     };
     const existingItem = await client.send(new GetItemCommand(getItemParams));
 
@@ -77,15 +78,13 @@ const deleteEmployee = async (event) => {
       deleteResult,
     });
   } catch (e) {
-    console.log('---------error', e);
-    console.log(' e.$metadata.httpStatusCode,-----------', e.$metadata.httpStatusCode);
     console.error(e);
     response.statusCode = e.statusCode;
     response.body = JSON.stringify({
+      statusCode: e.$metadata.httpStatusCode,
       message: 'Failed to delete employee personal information.',
       errorMsg: e.message,
       errorStack: e.stack,
-      statusCode: e.$metadata.httpStatusCode,
     });
   }
   return response;
