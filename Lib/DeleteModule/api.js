@@ -77,6 +77,7 @@ const deleteEmployee = async (event) => {
       deleteResult,
     });
   } catch (e) {
+    console.log('---------error', e);
     console.error(e);
     response.statusCode = e.statusCode;
     response.body = JSON.stringify({
