@@ -83,6 +83,7 @@ const deleteEmployee = async (event) => {
       message: 'Failed to delete employee personal information.',
       errorMsg: e.message,
       errorStack: e.stack,
+      statusCode : e.statusCode,
     });
   }
   return response;
