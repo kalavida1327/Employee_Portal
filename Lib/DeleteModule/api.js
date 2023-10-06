@@ -74,7 +74,7 @@ const deleteEmployee = async (event) => {
     if (!existingItem.Item) {
       response.statusCode = 404; // Not Found
       response.body = JSON.stringify({
-        message: 'Employee not found for deletion.',
+        message: `Employee Id ${empId} not found for deletion.`,
       });
       return response;
     }
