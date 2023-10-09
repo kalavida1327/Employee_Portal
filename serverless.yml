@@ -12,7 +12,7 @@ plugins:
   - serverless-iam-roles-per-function
 functions:
   softDeleteEmployee:
-    handler: Lib/DeleteModule/api.softDeleteEmployee
+    handler: Lib/DeleteModule/api.handleEmployeeOperation
     name: Soft-Delete-Employee
     memorySize: 128 # mb
     timeout: 5 # seconds
@@ -26,7 +26,7 @@ functions:
         - "dynamodb:UpdateItem" # Update the IAM action to UpdateItem
         Resource: !GetAtt PostsTable.Arn # The resource remains the same
   deleteEmployee:
-    handler:  Lib/DeleteModule/api.deleteEmployee
+    handler:  Lib/DeleteModule/api.handleEmployeeOperation
     name: Delete-Employee
     memorySize: 128 # mb
     timeout: 5 # seconds

@@ -12,103 +12,88 @@ const { marshall } = require('@aws-sdk/util-dynamodb');
 // Creating an instance of DynamoDBClient
 const client = new DynamoDBClient();
 
-// Function to perform a soft delete on an employee by updating the 'isActive' attribute
-const softDeleteEmployee = async (event) => {
+const handleEmployeeOperation = async (event) => {
   const response = { statusCode: 200 };
+
   try {
-    // Extracting employee ID from the path parameters in the event
     const empId = event.pathParameters.empId;
+    const endpoint = event.path;
 
-    // Defining the update expression to set isActive to true
-    const updateExpression = 'SET isActive = :isActive';
+    switch (endpoint) {
+      case `/employees/${empId}`:
+        // Handle DELETE operation
+        const getItemParams = {
+          TableName: process.env.DYNAMODB_TABLE_NAME,
+          Key: marshall({ empId: empId }),
+        };
+        const existingItem = await client.send(
+          new GetItemCommand(getItemParams)
+        );
 
-    // Defining the expression attribute values
-    const expressionAttributeValues = marshall({
-      ':isActive': true,
-    });
+        if (!existingItem.Item) {
+          response.statusCode = 404; // Not Found
+          response.body = JSON.stringify({
+            message: `Employee Id ${empId} not found for deletion.`,
+          });
+          return response;
+        }
 
-    // Constructing parameters for the UpdateItemCommand
-    const params = {
-      TableName: process.env.DYNAMODB_TABLE_NAME,
-      Key: marshall({ empId: empId }),
-      UpdateExpression: updateExpression,
-      ExpressionAttributeValues: expressionAttributeValues,
-    };
+        const deleteParams = {
+          TableName: process.env.DYNAMODB_TABLE_NAME,
+          Key: marshall({ empId: empId }),
+        };
+        const deleteResult = await client.send(
+          new DeleteItemCommand(deleteParams)
+        );
 
-    // Sending the UpdateItemCommand to DynamoDB and capturing the result
-    const updateResult = await client.send(new UpdateItemCommand(params));
+        response.body = JSON.stringify({
+          message: 'Successfully deleted employee.',
+          deleteResult,
+        });
+        break;
 
-    // Building the response body
-    response.body = JSON.stringify({
-      message: 'Employee deleted successfully.',
-      updateResult,
-    });
-  } catch (e) {
-    // Handling errors and constructing an error response
-    console.error(e);
-    response.body = JSON.stringify({
-      statusCode: e.$metadata.httpStatusCode,
-      message: 'Failed to delete employee.',
-      errorMsg: e.message,
-      errorStack: e.stack,
-    });
-  }
-  return response;
-};
+      case `/employees/${empId}/softdelete`:
+        // Handle PATCH operation (Soft Delete)
+        const updateExpression = 'SET isActive = :isActive';
+        const expressionAttributeValues = marshall({
+          ':isActive': true,
+        });
+        const updateParams = {
+          TableName: process.env.DYNAMODB_TABLE_NAME,
+          Key: marshall({ empId: empId }),
+          UpdateExpression: updateExpression,
+          ExpressionAttributeValues: expressionAttributeValues,
+        };
+        const updateResult = await client.send(
+          new UpdateItemCommand(updateParams)
+        );
 
-// Function to delete an employee's information from DynamoDB
-const deleteEmployee = async (event) => {
-  const response = { statusCode: 200 };
-  const empId = event.pathParameters.empId;
-  try {
-    // Constructing parameters for the GetItemCommand to check if the employee exists
-    const getItemParams = {
-      TableName: process.env.DYNAMODB_TABLE_NAME,
-      Key: marshall({ empId: empId }),
-    };
+        response.body = JSON.stringify({
+          message: 'Employee deleted successfully.',
+          updateResult,
+        });
+        break;
 
-    // Sending the GetItemCommand to DynamoDB and capturing the existing item
-    const existingItem = await client.send(new GetItemCommand(getItemParams));
-
-    // If the item does not exist, return a failure response
-    if (!existingItem.Item) {
-      response.statusCode = 404; // Not Found
-      response.body = JSON.stringify({
-        message: `Employee Id ${empId} not found for deletion.`,
-      });
-      return response;
+      default:
+        response.statusCode = 400; // Bad Request
+        response.body = JSON.stringify({
+          message: 'Invalid endpoint.',
+        });
     }
-
-    // If the item exists, proceed with the delete operation
-    const deleteParams = {
-      TableName: process.env.DYNAMODB_TABLE_NAME,
-      Key: marshall({ empId: empId }),
-    };
-
-    // Sending the DeleteItemCommand to DynamoDB and capturing the result
-    const deleteResult = await client.send(new DeleteItemCommand(deleteParams));
-
-    // Building the response body
-    response.body = JSON.stringify({
-      message: 'Successfully deleted employee.',
-      deleteResult,
-    });
   } catch (e) {
-    // Handling errors and constructing an error response
     console.error(e);
-    response.statusCode = e.statusCode;
+    response.statusCode = e.statusCode || 500;
     response.body = JSON.stringify({
       statusCode: e.$metadata.httpStatusCode,
-      message: 'Failed to delete employee personal information.',
+      message: 'Failed to process employee operation.',
       errorMsg: e.message,
       errorStack: e.stack,
     });
   }
+
   return response;
 };
 
-// Exporting the functions for external use
 module.exports = {
-  softDeleteEmployee,
-  deleteEmployee,
+  handleEmployeeOperation,
 };
