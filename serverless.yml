@@ -28,8 +28,7 @@ functions:
         Action:
           - "dynamodb:DeleteItem"
           - "dynamodb:UpdateItem"
-        Resource: 
-          - !GetAtt PostsTable.Arn 
+        Resource: !GetAtt PostsTable.Arn 
 resources:
   Resources:
     PostsTable:
