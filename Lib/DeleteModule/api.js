@@ -12,7 +12,6 @@ const { marshall } = require('@aws-sdk/util-dynamodb');
 // Creating an instance of DynamoDBClient
 const client = new DynamoDBClient();
 
-
 const handleDeleteOperation = async (event) => {
   const response = { statusCode: 200 };
     const empId = event.pathParameters.empId;
@@ -86,8 +85,9 @@ const handleDeleteOperation = async (event) => {
   } catch (e) {
     console.error(e);
     response.statusCode = e.statusCode || 500;
+    const metadata = e.$metadata || {};
     response.body = JSON.stringify({
-      statusCode: e.$metadata.httpStatusCode,
+      statusCode: metadata.httpStatusCode || response.statusCode,
       message: `Failed to process${empId} employee operation.`,
       errorMsg: e.message,
       errorStack: e.stack,
