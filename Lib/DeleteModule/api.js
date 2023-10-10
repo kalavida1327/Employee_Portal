@@ -42,7 +42,7 @@ const handleDeleteOperation = async (event) => {
         const deleteParams = {
           TableName: process.env.DYNAMODB_TABLE_NAME,
           Key: marshall({ empId: empId }),
-          ConditionExpression: 'attribute_not_exists(empId)',
+          ConditionExpression: 'attribute_exists(empId)',
         };
         const deleteResult = await client.send(
           new DeleteItemCommand(deleteParams)
@@ -65,7 +65,7 @@ const handleDeleteOperation = async (event) => {
           Key: marshall({ empId: empId }),
           UpdateExpression: updateExpression,
           ExpressionAttributeValues: expressionAttributeValues,
-          ConditionExpression: 'attribute_not_exists(empId)',
+          ConditionExpression: 'attribute_exists(empId)',
         };
         const updateResult = await client.send(
           new UpdateItemCommand(updateParams)
