@@ -21,14 +21,15 @@ functions:
           path: employees/{empId}
           method: DELETE 
       - http:
-          path: PATCH/employees/{empId}   
-          method: DELETE  
+          path: PATCH/employees/{empId}
+          method: DELETE 
     iamRoleStatements:
       - Effect: "Allow"
         Action:
-        - "dynamodb:DeleteItem"
-        - "dynamodb:UpdateItem" # Update the IAM action to UpdateItem
-        Resource: !GetAtt PostsTable.Arn # The resource remains the same   
+          - "dynamodb:DeleteItem"
+          - "dynamodb:UpdateItem"
+        Resource: 
+          - Fn::GetAtt: [PostsTable, Arn]
 resources:
   Resources:
     PostsTable:
