@@ -29,7 +29,7 @@ functions:
           - "dynamodb:DeleteItem"
           - "dynamodb:UpdateItem"
         Resource: 
-          - Fn::GetAtt: [PostsTable, Arn]
+          - !GetAtt PostsTable.Arn 
 resources:
   Resources:
     PostsTable:
