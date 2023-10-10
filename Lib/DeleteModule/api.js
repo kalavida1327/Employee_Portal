@@ -14,7 +14,7 @@ const client = new DynamoDBClient();
 
 const handleEmployeeOperation = async (event) => {
   const response = { statusCode: 200 };
-
+    const empId = event.pathParameters.empId;
   try {
     const empId = event.pathParameters.empId;
     const endpoint = event.path;
@@ -85,7 +85,7 @@ const handleEmployeeOperation = async (event) => {
     response.statusCode = e.statusCode || 500;
     response.body = JSON.stringify({
       statusCode: e.$metadata.httpStatusCode,
-      message: 'Failed to process employee operation.',
+      message: `Failed to process${empId} employee operation.`,
       errorMsg: e.message,
       errorStack: e.stack,
     });
