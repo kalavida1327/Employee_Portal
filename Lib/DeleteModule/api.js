@@ -54,7 +54,7 @@ const handleDeleteOperation = async (event) => {
         });
         break;
 
-      case `/employees/${empId}/softdelete`:
+      case `/PATCH/employees/${empId}`:
         // Handle PATCH operation (Soft Delete)
         const updateExpression = 'SET isActive = :isActive';
         const expressionAttributeValues = marshall({
@@ -65,7 +65,7 @@ const handleDeleteOperation = async (event) => {
           Key: marshall({ empId: empId }),
           UpdateExpression: updateExpression,
           ExpressionAttributeValues: expressionAttributeValues,
-          ConditionExpression: 'attribute_not_exists(empId)'
+          ConditionExpression: 'attribute_not_exists(empId)',
         };
         const updateResult = await client.send(
           new UpdateItemCommand(updateParams)
