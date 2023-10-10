@@ -22,7 +22,7 @@ functions:
           method: DELETE 
       - http:
           path: PATCH/employees/{empId}
-          method: PATCH 
+          method: DELETE 
     iamRoleStatements:
       - Effect: "Allow"
         Action:
