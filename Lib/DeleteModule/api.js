@@ -12,7 +12,7 @@ const { marshall } = require('@aws-sdk/util-dynamodb');
 // Creating an instance of DynamoDBClient
 const client = new DynamoDBClient();
 
-const handleEmployeeOperation = async (event) => {
+const handleDeleteOperation = async (event) => {
   const response = { statusCode: 200 };
     const empId = event.pathParameters.empId;
   try {
@@ -95,5 +95,5 @@ const handleEmployeeOperation = async (event) => {
 };
 
 module.exports = {
-  handleEmployeeOperation,
+  handleDeleteOperation,
 };
