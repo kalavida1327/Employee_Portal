@@ -24,7 +24,7 @@ const handleEmployeeOperation = async (event) => {
         // Handle DELETE operation
         const getItemParams = {
           TableName: process.env.DYNAMODB_TABLE_NAME,
-          Key: marshall({ empId: empId }),
+          Key: marshall({ empd: empId }),
         };
         const existingItem = await client.send(
           new GetItemCommand(getItemParams)
