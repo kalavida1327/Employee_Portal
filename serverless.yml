@@ -21,8 +21,8 @@ functions:
           path: employees/{empId}
           method: DELETE 
       - http:
-          path: PATCH /employees/{empId}   
-          method: DELETE # Change the method to PATCH    
+          path: PATCH/employees/{empId}   
+          method: DELETE  
     iamRoleStatements:
       - Effect: "Allow"
         Action:
