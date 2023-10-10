@@ -23,12 +23,12 @@ functions:
       - http:
           path: PATCH/employees/{empId}
           method: DELETE 
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - "dynamodb:DeleteItem"
-          - "dynamodb:UpdateItem"
-        Resource: !GetAtt PostsTable.Arn 
+    # iamRoleStatements:
+    #   - Effect: "Allow"
+    #     Action:
+    #       - "dynamodb:DeleteItem"
+    #       - "dynamodb:UpdateItem"
+    #     Resource: !GetAtt PostsTable.Arn 
 resources:
   Resources:
     PostsTable:
