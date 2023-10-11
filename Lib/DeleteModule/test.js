@@ -12,7 +12,7 @@ const mockClient = {
 // Creating Mock event object
 const event = {
   pathParameters: {
-    empId: '105',
+    empId: '102',
   },
 };
 

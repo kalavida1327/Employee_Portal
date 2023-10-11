@@ -3,7 +3,7 @@ const {
   DynamoDBClient,
   DeleteItemCommand,
   UpdateItemCommand,
-  GetItemCommand,
+  GetItemCommand
 } = require('@aws-sdk/client-dynamodb');
 
 // Importing the marshall function from the utility library for DynamoDB
@@ -17,27 +17,11 @@ const handleDeleteOperation = async (event) => {
     const empId = event.pathParameters.empId;
   try {
     const empId = event.pathParameters.empId;
+    
     const endpoint = event.path;
 
     switch (endpoint) {
       case `/employees/${empId}`:
-        // Handle DELETE operation
-        const getItemParams = {
-          TableName: process.env.DYNAMODB_TABLE_NAME,
-          Key: marshall({ empId: empId }),
-        };
-        const existingItem = await client.send(
-          new GetItemCommand(getItemParams)
-        );
-
-        if (!existingItem.Item) {
-          response.statusCode = 404; // Not Found
-          response.body = JSON.stringify({
-            message: `Employee Id ${empId} not found for deletion.`,
-          });
-          return response;
-        }
-
         const deleteParams = {
           TableName: process.env.DYNAMODB_TABLE_NAME,
           Key: marshall({ empId: empId }),
@@ -46,7 +30,6 @@ const handleDeleteOperation = async (event) => {
         const deleteResult = await client.send(
           new DeleteItemCommand(deleteParams)
         );
-
         response.body = JSON.stringify({
           message: 'Successfully deleted employee.',
           deleteResult,
@@ -57,7 +40,7 @@ const handleDeleteOperation = async (event) => {
         // Handle PATCH operation (Soft Delete)
         const updateExpression = 'SET isActive = :isActive';
         const expressionAttributeValues = marshall({
-          ':isActive': true,
+          ':isActive': false,
         });
         const updateParams = {
           TableName: process.env.DYNAMODB_TABLE_NAME,
