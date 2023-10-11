@@ -38,7 +38,7 @@ const handleDeleteOperation = async (event) => {
 
       case `/PATCH/employees/${empId}`:
         // Handle PATCH operation (Soft Delete)
-        const updateExpression = 'SET isActive = :isActive';
+        const updateExpression = 'SET PersonalInfo.isActive = :isActive';
         const expressionAttributeValues = marshall({
           ':isActive': false,
         });
