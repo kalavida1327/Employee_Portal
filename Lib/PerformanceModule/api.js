@@ -1,8 +1,8 @@
 // Importing necessary modules from the AWS SDK for DynamoDB
 const {
   DynamoDBClient,
-  DeleteItemCommand,
   UpdateItemCommand,
+  PutItemCommand,
 } = require('@aws-sdk/client-dynamodb');
 
 // Importing the marshall function from the utility library for DynamoDB
@@ -11,36 +11,55 @@ const { marshall } = require('@aws-sdk/util-dynamodb');
 // Creating an instance of DynamoDBClient
 const client = new DynamoDBClient();
 
-const handleDeleteOperation = async (event) => {
+const performanceHandler = async (event) => {
   const response = { statusCode: 200 };
-    const empId = event.pathParameters.empId;
+  const empId = event.pathParameters.empId;
   try {
-    const empId = event.pathParameters.empId;
-    
     const endpoint = event.path;
 
     switch (endpoint) {
-      case `/employees/${empId}`:
-        const deleteParams = {
+      case `/performance/create/${empId}`:
+        const params = {
           TableName: process.env.DYNAMODB_TABLE_NAME,
           Key: marshall({ empId: empId }),
           ConditionExpression: 'attribute_exists(empId)',
         };
-        const deleteResult = await client.send(
-          new DeleteItemCommand(deleteParams)
-        );
+        const CreatePerformance = await client.send(new PutItemCommand(params));
         response.body = JSON.stringify({
-          message: 'Successfully deleted employee.',
-          deleteResult,
+          message: 'Successfully created employee performance details.',
+          CreatePerformance,
         });
         break;
 
-      case `/PATCH/employees/${empId}`:
+      case `/performance/update/${empId}`:
+        const {
+          Description,
+          StartDate,
+          EndDate,
+          RatingClaimed,
+          RatingAwarded,
+          Comments,
+          IsActive,
+        } = event.pathParameters.PreformanceInfo;
         // Handle PATCH operation (Soft Delete)
-        const updateExpression = 'SET PersonalInfo.isActive = :isActive';
-        const expressionAttributeValues = marshall({
-          ':isActive': false,
-        });
+        const updateExpression =
+          'SET PerformanceInfo.Description = :Description, ' +
+          'PerformanceInfo.StartDate = :StartDate, ' +
+          'PerformanceInfo.EndDate = :EndDate, ' +
+          'PerformanceInfo.RatingClaimed = :RatingClaimed, ' +
+          'PerformanceInfo.RatingAwarded = :RatingAwarded, ' +
+          'PerformanceInfo.Comments = :Comments, ' +
+          'PerformanceInfo.IsActive = :IsActive';
+
+         const expressionAttributeValues = marshall({
+           ':Description': Description,
+           ':StartDate': StartDate,
+           ':EndDate': EndDate,
+           ':RatingClaimed': RatingClaimed,
+           ':RatingAwarded': RatingAwarded,
+           ':Comments': Comments,
+           ':IsActive': IsActive
+         });
         const updateParams = {
           TableName: process.env.DYNAMODB_TABLE_NAME,
           Key: marshall({ empId: empId }),
@@ -80,5 +99,5 @@ const handleDeleteOperation = async (event) => {
 };
 
 module.exports = {
-  handleDeleteOperation,
+  performanceHandler,
 };

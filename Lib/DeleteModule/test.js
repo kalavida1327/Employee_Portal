@@ -59,7 +59,7 @@ describe('deleteEmployeeBankInfo', () => {
     });
 
     expect(response.statusCode).to.equal(400);
-    const responseBody = JSON.parse(response.body);
+    const responseBody = JSON.parse(response.body); 
     expect(responseBody.message).to.equal('Invalid endpoint.');
   });
 

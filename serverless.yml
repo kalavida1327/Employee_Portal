@@ -29,6 +29,24 @@ functions:
         - "dynamodb:DeleteItem"
         - "dynamodb:UpdateItem"
         Resource: !GetAtt PostsTable.Arn # The resource remains the same   
+  performanceHandler:
+    handler:  Lib/PerformanceModule/api.performanceHandler
+    name: Performance-Handler
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: employees/create/{empId}
+          method: POST
+      - http:
+          path: employees/update/{empId}
+          method: PUT    
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+        - "dynamodb:CreateItem"
+        - "dynamodb:UpdateItem"
+        Resource: !GetAtt PostsTable.Arn # The resource remains the same         
 resources:
   Resources:
     PostsTable:
