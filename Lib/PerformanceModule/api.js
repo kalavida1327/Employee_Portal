@@ -18,8 +18,10 @@ const performanceHandler = async (event) => {
     const endpoint = event.path;
     const performanceDetails = event.body.PerformanceInfo;
     const body = event.body;
-    
 
+    console.log('performanceDetails', performanceDetails);
+    console.log('body', body);
+    
     switch (endpoint) {
       case `/performance/create/${empId}`:
         const params = {
