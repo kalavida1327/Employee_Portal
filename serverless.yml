@@ -36,10 +36,10 @@ functions:
     timeout: 5 # seconds
     events:
       - http:
-          path: employees/create/{empId}
+          path: performance/create/{empId}
           method: POST
       - http:
-          path: employees/update/{empId}
+          path: performance/update/{empId}
           method: PUT    
     iamRoleStatements:
       - Effect: "Allow"
