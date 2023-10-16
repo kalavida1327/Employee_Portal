@@ -26,18 +26,21 @@ const performanceHandler = async (event) => {
       case `/performance/create/${empId}`:
         const params = {
           TableName: process.env.DYNAMODB_TABLE_NAME,
-          Key: marshall({
-            empId: body.empId,
-            PerformanceInfo: {
-              Comments: performanceDetails?.Comments,
-              Description: performanceDetails?.Description,
-              StartDate: performanceDetails?.StartDate,
-              EndDate: performanceDetails?.EndDate,
-              IsActive: performanceDetails?.IsActive,
-              RatingAwarded: performanceDetails?.RatingAwarded,
-              RatingClaimed: performanceDetails?.RatingClaimed,
+          Key: marshall(
+            {
+              empId: body.empId,
+              PerformanceInfo: {
+                Comments: performanceDetails?.Comments,
+                Description: performanceDetails?.Description,
+                StartDate: performanceDetails?.StartDate,
+                EndDate: performanceDetails?.EndDate,
+                IsActive: performanceDetails?.IsActive,
+                RatingAwarded: performanceDetails?.RatingAwarded,
+                RatingClaimed: performanceDetails?.RatingClaimed,
+              },
             },
-          }),
+            { removeUndefinedValues: true }
+          ),
           ConditionExpression: 'attribute_exists(empId)',
         };
         const CreatePerformance = await client.send(new PutItemCommand(params));
