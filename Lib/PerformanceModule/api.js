@@ -16,12 +16,26 @@ const performanceHandler = async (event) => {
   const empId = event.pathParameters.empId;
   try {
     const endpoint = event.path;
+    const performanceDetails = event.body.PerformanceInfo;
+    const body = event.body;
+    
 
     switch (endpoint) {
       case `/performance/create/${empId}`:
         const params = {
           TableName: process.env.DYNAMODB_TABLE_NAME,
-          Key: marshall({ empId: empId }),
+          Key: marshall({
+            empId: body.empId,
+            PerformanceInfo: {
+              Comments: performanceDetails.Comments,
+              Discription: performanceDetails.Discription,
+              EndDate: performanceDetails.EndDate,
+              IsActive: performanceDetails.IsActive,
+              RatingAwarded: performanceDetails.RatingAwarded,
+              RatingClaimed: performanceDetails.RatingClaimed,
+              StartDate: performanceDetails.StartDate,
+            },
+          }),
           ConditionExpression: 'attribute_exists(empId)',
         };
         const CreatePerformance = await client.send(new PutItemCommand(params));
