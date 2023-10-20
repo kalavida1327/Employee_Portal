@@ -16,7 +16,7 @@ const performanceHandler = async (event) => {
   const empId = event.pathParameters.empId;
   try {
     const endpoint = event.path;
-    const PerformanceInfo = event?.body?.empId;
+    const PerformanceInfo = event?.body;
     const body = event.body;
 
     // Log the entire event for better understanding
@@ -42,15 +42,15 @@ const performanceHandler = async (event) => {
           TableName: process.env.DYNAMODB_TABLE_NAME,
           Key: marshall(
             {
-              empId: body?.empId,
+              empId: PerformanceInfo?.empId, // Access directly from PerformanceInfo
               PerformanceInfo: {
-                Comments: PerformanceInfo?.Comments,
-                Discription: PerformanceInfo?.Discription,
-                StartDate: PerformanceInfo?.StartDate,
-                EndDate: PerformanceInfo?.EndDate,
-                IsActive: PerformanceInfo?.IsActive,
-                RatingAwarded: PerformanceInfo?.RatingAwarded,
-                RatingClaimed: PerformanceInfo?.RatingClaimed,
+                Comments: PerformanceInfo?.PerformanceInfo?.Comments,
+                Discription: PerformanceInfo?.PerformanceInfo?.Discription,
+                StartDate: PerformanceInfo?.PerformanceInfo?.StartDate,
+                EndDate: PerformanceInfo?.PerformanceInfo?.EndDate,
+                IsActive: PerformanceInfo?.PerformanceInfo?.IsActive,
+                RatingAwarded: PerformanceInfo?.PerformanceInfo?.RatingAwarded,
+                RatingClaimed: PerformanceInfo?.PerformanceInfo?.RatingClaimed,
               },
             },
             { removeUndefinedValues: true }
