@@ -19,7 +19,7 @@ const performanceHandler = async (event) => {
     const performanceDetails = event.body.PerformanceInfo;
     const body = event.body;
 
-    console.log('performanceDetails', performanceDetails);
+    console.log('-------------performanceDetails----------', performanceDetails);
     console.log('body', body);
     
     switch (endpoint) {
