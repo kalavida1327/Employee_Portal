@@ -28,7 +28,7 @@ const performanceHandler = async (event) => {
           TableName: process.env.DYNAMODB_TABLE_NAME,
           Key: marshall(
             {
-              empId: body.empId,
+              empId: body?.empId,
               PerformanceInfo: {
                 Comments: performanceDetails?.Comments,
                 Description: performanceDetails?.Description,
@@ -57,7 +57,7 @@ const performanceHandler = async (event) => {
           RatingClaimed,
           RatingAwarded,
           Comments,
-          IsActive,
+          IsActive
         } = event.pathParameters.PreformanceInfo;
         // Handle PATCH operation (Soft Delete)
         const updateExpression =
