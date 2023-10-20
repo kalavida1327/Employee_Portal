@@ -45,7 +45,7 @@ const performanceHandler = async (event) => {
               empId: body?.empId,
               PerformanceInfo: {
                 Comments: PerformanceInfo?.Comments,
-                Description: PerformanceInfo?.Description,
+                Discription: PerformanceInfo?.Discription,
                 StartDate: PerformanceInfo?.StartDate,
                 EndDate: PerformanceInfo?.EndDate,
                 IsActive: PerformanceInfo?.IsActive,
