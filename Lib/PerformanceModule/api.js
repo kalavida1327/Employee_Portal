@@ -16,7 +16,7 @@ const performanceHandler = async (event) => {
   const empId = event.pathParameters.empId;
   try {
     const endpoint = event.path;
-    const PerformanceInfo = event?.body?.PerformanceInfo;
+    const PerformanceInfo = event?.body?.empId;
     const body = event.body;
 
     console.log('-------------PerformanceInfo----------', PerformanceInfo);
