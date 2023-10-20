@@ -19,9 +19,23 @@ const performanceHandler = async (event) => {
     const PerformanceInfo = event?.body?.empId;
     const body = event.body;
 
+    // Log the entire event for better understanding
+    console.log('-------------event----------', JSON.stringify(event, null, 2));
+
+    // Ensure that event.body is defined
+    if (!body) {
+      throw new Error('Request body is undefined');
+    }
+
+
+    // Check if PerformanceInfo is undefined or null
+    if (!PerformanceInfo) {
+      throw new Error('PerformanceInfo is undefined or null');
+    }
+
     console.log('-------------PerformanceInfo----------', PerformanceInfo);
     console.log('body', body);
-    
+
     switch (endpoint) {
       case `/performance/create/${empId}`:
         const params = {
@@ -57,7 +71,7 @@ const performanceHandler = async (event) => {
           RatingClaimed,
           RatingAwarded,
           Comments,
-          IsActive
+          IsActive,
         } = event.pathParameters.PreformanceInfo;
         // Handle PATCH operation (Soft Delete)
         const updateExpression =
@@ -69,15 +83,15 @@ const performanceHandler = async (event) => {
           'PerformanceInfo.Comments = :Comments, ' +
           'PerformanceInfo.IsActive = :IsActive';
 
-         const expressionAttributeValues = marshall({
-           ':Description': Description,
-           ':StartDate': StartDate,
-           ':EndDate': EndDate,
-           ':RatingClaimed': RatingClaimed,
-           ':RatingAwarded': RatingAwarded,
-           ':Comments': Comments,
-           ':IsActive': IsActive
-         });
+        const expressionAttributeValues = marshall({
+          ':Description': Description,
+          ':StartDate': StartDate,
+          ':EndDate': EndDate,
+          ':RatingClaimed': RatingClaimed,
+          ':RatingAwarded': RatingAwarded,
+          ':Comments': Comments,
+          ':IsActive': IsActive,
+        });
         const updateParams = {
           TableName: process.env.DYNAMODB_TABLE_NAME,
           Key: marshall({ empId: empId }),
