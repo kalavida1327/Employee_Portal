@@ -16,10 +16,10 @@ const performanceHandler = async (event) => {
   const empId = event.pathParameters.empId;
   try {
     const endpoint = event.path;
-    const performanceDetails = event?.body?.PerformanceInfo;
+    const PerformanceInfo = event?.body?.PerformanceInfo;
     const body = event.body;
 
-    console.log('-------------performanceDetails----------', performanceDetails);
+    console.log('-------------PerformanceInfo----------', PerformanceInfo);
     console.log('body', body);
     
     switch (endpoint) {
@@ -30,17 +30,17 @@ const performanceHandler = async (event) => {
             {
               empId: body?.empId,
               PerformanceInfo: {
-                Comments: performanceDetails?.Comments,
-                Description: performanceDetails?.Description,
-                StartDate: performanceDetails?.StartDate,
-                EndDate: performanceDetails?.EndDate,
-                IsActive: performanceDetails?.IsActive,
-                RatingAwarded: performanceDetails?.RatingAwarded,
-                RatingClaimed: performanceDetails?.RatingClaimed,
+                Comments: PerformanceInfo?.Comments,
+                Description: PerformanceInfo?.Description,
+                StartDate: PerformanceInfo?.StartDate,
+                EndDate: PerformanceInfo?.EndDate,
+                IsActive: PerformanceInfo?.IsActive,
+                RatingAwarded: PerformanceInfo?.RatingAwarded,
+                RatingClaimed: PerformanceInfo?.RatingClaimed,
               },
             },
             { removeUndefinedValues: true }
-          )
+          ),
         };
         const CreatePerformance = await client.send(new PutItemCommand(params));
         response.body = JSON.stringify({
