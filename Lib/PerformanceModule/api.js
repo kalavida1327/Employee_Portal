@@ -40,8 +40,7 @@ const performanceHandler = async (event) => {
               },
             },
             { removeUndefinedValues: true }
-          ),
-          ConditionExpression: 'attribute_exists(empId)',
+          )
         };
         const CreatePerformance = await client.send(new PutItemCommand(params));
         response.body = JSON.stringify({
